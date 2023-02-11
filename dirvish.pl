@@ -129,7 +129,7 @@ sub usage
 	print STDERR <<EOUSAGE;
 USAGE
 	dirvish --vault vault OPTIONS [ file_list ]
-	
+
 OPTIONS
 	--image image_name
 	--config configfile
@@ -475,7 +475,7 @@ if (!$$Options{'no-run'})
 	}
 
 	open(SUMMARY, ">$vault/$image/summary")
-		or seppuku 231, "cannot create $vault/$image/summary"; 
+		or seppuku 231, "cannot create $vault/$image/summary";
 } else {
 	open(SUMMARY, ">-");
 }
@@ -569,7 +569,7 @@ if(scalar @{$$Options{exclude}})
 	for (@{$$Options{exclude}})
 	{
 		print EXCLUDE $_, "\n";
-	}	
+	}
 	close(EXCLUDE);
 	$ENV{DIRVISH_EXCLUDE} = $exl_file;
 }
@@ -778,11 +778,7 @@ if($status{fatal})
 {
 	if ($$Options{btrfs})
 	{
-		# am I not root?
-		if ($< != 0)
-		{
-			system("btrfs property set -ts $destree ro false > /dev/null");
-		}
+		system("btrfs property set -ts $destree ro false > /dev/null");
 		system ("btrfs subvolume delete $destree > /dev/null");
 	} else {
 		system ("rm -rf $destree");
@@ -818,7 +814,10 @@ if ($Status eq 'success')
 			);
 		close (HIST);
 
-		system("btrfs property set -ts $destree ro true")
+		if ($$Options{btrfs})
+        {
+        	system("btrfs property set -ts $destree ro true")
+        }
 	}
 } else {
 	printf STDERR "dirvish error: branch %s:%s image %s failed\n",
@@ -838,7 +837,7 @@ $$Options{log} =~ /.*(gzip)|(bzip2)/
 
 if ($$Options{index} && $$Options{index} !~/^no/i)
 {
-	
+
 	open(INDEX, ">$vault/$image/index");
 	open(FIND, "find $destree -ls|") or seppuku 21, "dirvish $vault:$image cannot build index";
 	while (<FIND>)
@@ -897,7 +896,7 @@ sub errorscan
 		print ERR_FILE $_, "\n";
 
 		$$status{code} or next;
-		
+
 		for $action (@erraction)
 		{
 			($severity, $pattern, $message) = @$action;

@@ -47,7 +47,7 @@ sub usage
 	print STDERR <<EOUSAGE;
 USAGE
 	dirvish.expire OPTIONS
-	
+
 OPTIONS
 	--time date_expression
 	--[no]tree
@@ -59,8 +59,8 @@ EOUSAGE
 	exit 255;
 }
 
-$Options = 
-{ 
+$Options =
+{
 	help		=> \&usage,
 	version		=> sub {
 			print STDERR "dirvish version $VERSION\n";
@@ -156,7 +156,7 @@ for $expire (sort {imsort()} @expires)
 			$$expire{image};
 		$$expire{status} =~ /^success/
 			and ++$unexpired{$$expire{vault}}{$$expire{branch}};
-		# By virtue of the sort order this will be the newest 
+		# By virtue of the sort order this will be the newest
 		# image so that older ones can be expired.
 		$cannot_expire++;
 		next;
@@ -171,11 +171,7 @@ for $expire (sort {imsort()} @expires)
 
 	if ($$Options{btrfs})
 	{
-		# am I not root?
-		if ($< != 0)
-		{
-			system("btrfs property set -ts $$expire{path}/tree ro false > /dev/null");
-		}
+		system("btrfs property set -ts $destree ro false > /dev/null");
 		system("btrfs subvolume delete $$expire{path}/tree > /dev/null");
 	} else {
 		system("rm -rf $$expire{path}/tree");
@@ -229,7 +225,7 @@ sub findop
 
 		$summary = loadconfig('R', $File::Find::name);
 		$status = check_expire($summary, $expire_time);
-		
+
 		$status < 0 and return;
 
 		$$summary{vault} && $$summary{branch} && $$summary{Image}
