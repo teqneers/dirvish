@@ -92,7 +92,7 @@ else
 {
 	seppuku 251, "ERROR: no global configuration file";
 }
-$$Config{Dirvish} ||= 'dirvish';
+$$Config{Dirvish} ||= '/usr/sbin/dirvish';
 
 $$Options{'no-run'} and $$Options{quiet} = 0;
 
