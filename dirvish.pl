@@ -188,6 +188,11 @@ $Options = {
 				$$Options{$_[0]} = $_[1];
 				loadconfig('f', 'default.conf', $Options);
 			}
+			# remove trailing slash
+			if ($$Options{$_[0]} =~ /\/$/) {
+				print STDERR "NOTICE: Removing trailing slash...\n";
+				$$Options{$_[0]} =~ s/\/$//;
+			}
 		},
 	reset		=>
 		sub {
