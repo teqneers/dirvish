@@ -93,6 +93,7 @@ use Time::Period;
 	whole-file
 	xdev
 	zxfer
+	btrfs
 );
 
 %RSYNC_OPT = (		# simple options
@@ -458,7 +459,20 @@ if (!$$Options{'no-run'})
 {
 	mkdir "$vault/$image", 0700
 		or seppuku 230, "mkdir $vault/$image failed";
-	mkdir $destree, 0755;
+
+	if ($$Options{btrfs})
+	{
+		if ($$Options{init})
+		{
+			system("btrfs subvolume create $destree > /dev/null") == 0
+				or seppuku 233, "creating btrfs volume at $vault/$image/tree failed";
+		} else {
+			system("btrfs subvolume snapshot $reftree $destree > /dev/null") == 0
+				or seppuku 234, "creating btrfs snapshot at $vault/$image/tree failed";
+		}
+	} else {
+		mkdir $destree, 0755;
+	}
 
 	open(SUMMARY, ">$vault/$image/summary")
 		or seppuku 231, "cannot create $vault/$image/summary"; 
@@ -514,7 +528,7 @@ for $key (@summary_fields, 'RESET', sort(keys(%$Options)))
 	printf SUMMARY "%s: %s\n", $key, $val;
 }
 
-$$Options{init} or push @rsyncargs, "--link-dest=$reftree";
+$$Options{init} or $$Options{btrfs} or push @rsyncargs, "--link-dest=$reftree";
 
 $rclient = undef;
 $$Options{client} ne $$Options{Server}
@@ -762,7 +776,17 @@ if ($$Options{'post-server'})
 
 if($status{fatal})
 {
-	system ("rm -rf $destree");
+	if ($$Options{btrfs})
+	{
+		# am I not root?
+		if ($< != 0)
+		{
+			system("btrfs property set -ts $destree ro false > /dev/null");
+		}
+		system ("btrfs subvolume delete $destree > /dev/null");
+	} else {
+		system ("rm -rf $destree");
+	}
 	unlink $err_temp;
 	printf SUMMARY "%s: %s\n", 'Status', $Status_msg;
 	exit 199;
@@ -793,6 +817,8 @@ if ($Status eq 'success')
 				$$Options{Expire}
 			);
 		close (HIST);
+
+		system("btrfs property set -ts $destree ro true")
 	}
 } else {
 	printf STDERR "dirvish error: branch %s:%s image %s failed\n",

@@ -169,7 +169,17 @@ for $expire (sort {imsort()} @expires)
 
 	$$Options{'no-run'} and next;
 
-	system("rm -rf $$expire{path}/tree");
+	if ($$Options{btrfs})
+	{
+		# am I not root?
+		if ($< != 0)
+		{
+			system("btrfs property set -ts $$expire{path}/tree ro false > /dev/null");
+		}
+		system("btrfs subvolume delete $$expire{path}/tree > /dev/null");
+	} else {
+		system("rm -rf $$expire{path}/tree");
+	}
 	$$Options{tree} and next;
 
 	system("rm -rf $$expire{path}");
