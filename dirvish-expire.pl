@@ -140,7 +140,7 @@ if (!$$Options{quiet})
 		qw(VAULT:BRANCH IMAGE CREATED EXPIRED);
 }
 
-for $expire (sort(imsort @expires))
+for $expire (sort {imsort()} @expires)
 {
 	my ($created, $expired);
 	($created = $$expire{created}) =~ s/:\d\d$//;
