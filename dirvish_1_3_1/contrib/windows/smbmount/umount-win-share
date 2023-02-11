@@ -1,5 +1,0 @@
-#!/bin/sh
-
-MACHINE=$1  
-umount /mnt/dirvish/${MACHINE}
-
