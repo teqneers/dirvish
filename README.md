@@ -35,7 +35,7 @@ The [Debian Howto](https://dirvish.org/debian.howto.html) by Paul Slootman is a 
 
 The [INSTALL] instructions list dependencies and outlines setting up dirvish.
 
-While not a HOWTO, the dirvish FAQ may help answer questions that come to mind while reading the other documentation and configuring dirivsh.
+While not a HOWTO, the dirvish [FAQ](https://dirvish.org/FAQ.html) may help answer questions that come to mind while reading the other documentation and configuring dirivsh.
 
 Links
 
