@@ -35,7 +35,7 @@ Jason Boxman wrote a [dirvish guide](https://wiki.diala.org/doc:boxman). Check i
 
 The [Debian Howto](https://dirvish.org/debian.howto.html) by Paul Slootman is a pretty decent recepe for setting up dirvish for local backup of a single workstation. There are some Debian package specifics but they are minor. Even if you are going to be using dirvish for backing up a network this is a good start.
 
-The [INSTALL] instructions list dependencies and outlines setting up dirvish.
+The [INSTALL](INSTALL) instructions list dependencies and outlines setting up dirvish.
 
 While not a HOWTO, the dirvish [FAQ](https://dirvish.org/FAQ.html) may help answer questions that come to mind while reading the other documentation and configuring dirivsh.
 
