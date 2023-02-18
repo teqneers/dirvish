@@ -19,13 +19,13 @@ Dirvish Documentation and links
 
 ## Dirvish Manpages
 
-| Name                   | Description                                             |
-|------------------------|---------------------------------------------------------|
-| [dirvish.8](dirvish.8) | The dirvish backup utility.                             |
-| [dirvish.conf.5]	      | Configuration file options and format.                  |
-| [dirvish-runall.8]     | Utility to run a set of dirvish backup jobs             |
-| [dirvish-expire.8]     | Utility to remove expired dirvish images.               |
-| [dirvish-locate.8]     | Utility to locate versions of files in a dirvish vault. |
+| Name                                 | Description                                             |
+|--------------------------------------|---------------------------------------------------------|
+| [dirvish.8](dirvish.8)               | The dirvish backup utility.                             |
+| [dirvish.conf.5](dirvish.conf.5)	    | Configuration file options and format.                  |
+| [dirvish-runall.8](dirvish-runall.8) | Utility to run a set of dirvish backup jobs             |
+| [dirvish-expire.8](dirvish-expire.8) | Utility to remove expired dirvish images.               |
+| [dirvish-locate.8](dirvish-locate.8) | Utility to locate versions of files in a dirvish vault. |
 
 ## Dirvish HOWTOs
 
