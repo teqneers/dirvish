@@ -147,7 +147,7 @@ for $expire (sort {imsort()} @expires)
 	my ($created, $expired);
 	($created = $$expire{created}) =~ s/:\d\d$//;
 	($expired = $$expire{expire}) =~ s/:\d\d$//;
-	
+
 	if (!$unexpired{$$expire{vault}}{$$expire{branch}})
 	{
 		printf "cannot expire %s:%s:%s No unexpired good images\n",
@@ -169,12 +169,13 @@ for $expire (sort {imsort()} @expires)
 
 	$$Options{'no-run'} and next;
 
+    my $destree = "$$expire{path}/tree";
 	if ($$Options{btrfs})
 	{
-		system("btrfs property set -ts $destree ro false > /dev/null");
-		system("btrfs subvolume delete $$expire{path}/tree > /dev/null");
+        system("btrfs property set -ts $destree ro false > /dev/null 2>&1");
+        system("btrfs subvolume delete $destree > /dev/null 2>&1");
 	} else {
-		system("rm -rf $$expire{path}/tree");
+		system("rm -rf $destree");
 	}
 	$$Options{tree} and next;
 
@@ -263,4 +264,3 @@ sub imsort
 	|| $$a{branch} cmp $$b{branch}
 	|| $$a{created} cmp $$b{created};
 }
-
