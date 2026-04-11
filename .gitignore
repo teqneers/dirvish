@@ -1,1 +1,7 @@
 .idea
+
+# ignore those commands, they are getting created by install.sh
+dirvish
+dirvish-expire
+dirvish-locate
+dirvish-runall
