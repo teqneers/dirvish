@@ -16,10 +16,6 @@ if $BTRFS_MODE; then
     echo ""
 fi
 
-echo "Setting up SSH..."
-/tests/setup_ssh.sh
-echo ""
-
 mkdir -p "$TEST_BANK"
 export TEST_BANK
 
@@ -33,12 +29,14 @@ if $BTRFS_MODE; then
     echo "btrfs: 1" >> /etc/dirvish/master.conf
 fi
 
-# RSH option written once for all test vaults to use.
-# Use 127.0.0.1 (not localhost) to avoid IPv6 resolution; sshd is bound to 127.0.0.1.
-export DIRVISH_RSH="ssh -o StrictHostKeyChecking=no -o PasswordAuthentication=no -o PreferredAuthentications=publickey"
-export DIRVISH_CLIENT="127.0.0.1"
+# dirvish.pl sets Server = `hostname` (line 259).  When client == Server,
+# $rclient is left undef and rsync uses a plain local path — no SSH required.
+# This is simpler and more portable than configuring sshd in every container.
+export DIRVISH_CLIENT
+DIRVISH_CLIENT=$(hostname)
+export DIRVISH_RSH="ssh"   # fallback value; unused when client == server
 
-echo "Running tests (BTRFS_MODE=$BTRFS_MODE, TEST_BANK=$TEST_BANK)"
+echo "Running tests (BTRFS_MODE=$BTRFS_MODE, TEST_BANK=$TEST_BANK, CLIENT=$DIRVISH_CLIENT)"
 echo ""
 
 TOTAL_FAIL=0
