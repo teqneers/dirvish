@@ -111,7 +111,7 @@ for $sched (@{$$Config{Runall}})
 			$wait_result = waitpid($pid, WNOHANG);
 			if ($wait_result > 0) {
 				# Increment the error counter if dirvish failed
-				$? < 0 || $? / 256 and ++$errors;
+				$? < 0 || $? >> 8 and ++$errors;
 			} else {
 				# Keep PID
 				push(@pidList2, $pid);
@@ -136,6 +136,7 @@ for $sched (@{$$Config{Runall}})
 	} elsif ($pid == -1) {
 		# Failed fork
 		print "Fork failed!\n";
+		++$errors;
 	} else {
 		# pid == 0, child thread
 		exec($cmd) || die "child exit";
@@ -148,7 +149,7 @@ for $pid (@pidList) {
 	$wait_result = waitpid($pid, 0);
 	if ($wait_result == -1 or $wait_result == $pid) {
 		# Increment the error counter if dirvish failed
-		$? < 0 || $? / 256 and ++$errors;
+		$? < 0 || $? >> 8 and ++$errors;
 	}
 }
 

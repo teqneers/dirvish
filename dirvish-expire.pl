@@ -172,8 +172,10 @@ for $expire (sort {imsort()} @expires)
     my $destree = "$$expire{path}/tree";
 	if ($$Options{btrfs})
 	{
-        system("btrfs property set -ts $destree ro false > /dev/null 2>&1");
-        system("btrfs subvolume delete $destree > /dev/null 2>&1");
+        system("btrfs property set -ts $destree ro false > /dev/null 2>&1") == 0
+			or printf STDERR "dirvish-expire: warning: failed to clear read-only on $destree\n";
+        system("btrfs subvolume delete $destree > /dev/null 2>&1") == 0
+			or printf STDERR "dirvish-expire: warning: failed to delete btrfs subvolume $destree\n";
 	} else {
 		system("rm -rf $destree");
 	}

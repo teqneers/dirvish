@@ -778,8 +778,10 @@ if($status{fatal})
 {
 	if ($$Options{btrfs})
 	{
-		system("btrfs property set -ts $destree ro false > /dev/null");
-		system ("btrfs subvolume delete $destree > /dev/null");
+		system("btrfs property set -ts $destree ro false > /dev/null") == 0
+			or printf STDERR "dirvish: warning: failed to clear read-only on $destree\n";
+		system ("btrfs subvolume delete $destree > /dev/null") == 0
+			or printf STDERR "dirvish: warning: failed to delete btrfs subvolume $destree\n";
 	} else {
 		system ("rm -rf $destree");
 	}
@@ -802,7 +804,10 @@ $Status eq 'warning' || $Status eq 'unknown' and $Status = 'success';
 if ($Status eq 'success')
 {
 	-s "$vault/dirvish/$$Options{branch}.hist" or $newhist = 1;
-	if (open(HIST, ">>$vault/dirvish/$$Options{branch}.hist"))
+	-d "$vault/dirvish" or mkdir "$vault/dirvish", 0700;
+	open(HIST, ">>$vault/dirvish/$$Options{branch}.hist")
+		or seppuku 21, "dirvish: cannot write history $vault/dirvish/$$Options{branch}.hist: $!";
+	if (1)
 	{
 		$newhist == 1 and printf HIST ("#%s\t%s\t%s\t%s\n",
 				qw(IMAGE CREATED REFERECE EXPIRES));
@@ -816,7 +821,8 @@ if ($Status eq 'success')
 
 		if ($$Options{btrfs})
         {
-        	system("btrfs property set -ts $destree ro true")
+        	system("btrfs property set -ts $destree ro true") == 0
+				or seppuku 21, "dirvish: failed to set read-only on $destree";
         }
 	}
 } else {
@@ -838,7 +844,7 @@ $$Options{log} =~ /.*(gzip)|(bzip2)/
 if ($$Options{index} && $$Options{index} !~/^no/i)
 {
 
-	open(INDEX, ">$vault/$image/index");
+	open(INDEX, ">$vault/$image/index") or seppuku 21, "dirvish $vault:$image cannot open index for writing";
 	open(FIND, "find $destree -ls|") or seppuku 21, "dirvish $vault:$image cannot build index";
 	while (<FIND>)
 	{
