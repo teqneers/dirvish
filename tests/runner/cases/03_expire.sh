@@ -21,14 +21,23 @@ EOF
 
 # Create a first (valid) image via a real backup
 dirvish --vault "$VAULT" --init >/dev/null 2>&1
+BACKUP_EXIT=$?
+assert_eq "$BACKUP_EXIT" "0" "init backup exits 0"
 KEEP_IMAGE=$(ls -1 "$BANK/$VAULT/" | grep -v '^dirvish$' | head -1)
 assert_ne "$KEEP_IMAGE" "" "first image created"
+assert_contains "$BANK/$VAULT/$KEEP_IMAGE/summary" "Status: success" "init backup is success"
 
 # Inject a synthetic expired image by crafting a minimal summary file.
-# dirvish-expire reads: vault, branch, Image, Status, Expire, Backup-complete.
-# Expire date is parsed after stripping everything up to "== ".
+# In BTRFS mode the tree must be a proper subvolume so expire can delete it;
+# in standard mode a plain directory is fine.
 EXPIRED_IMAGE="20000101000000"
-mkdir -p "$BANK/$VAULT/$EXPIRED_IMAGE/tree"
+mkdir -p "$BANK/$VAULT/$EXPIRED_IMAGE"
+if [ "${BTRFS_MODE}" = "true" ]; then
+    btrfs subvolume create "$BANK/$VAULT/$EXPIRED_IMAGE/tree" >/dev/null
+    btrfs property set -ts "$BANK/$VAULT/$EXPIRED_IMAGE/tree" ro true >/dev/null
+else
+    mkdir -p "$BANK/$VAULT/$EXPIRED_IMAGE/tree"
+fi
 cat > "$BANK/$VAULT/$EXPIRED_IMAGE/summary" << EOF
 vault: $VAULT
 branch: default
@@ -43,8 +52,8 @@ EOF
 
 assert_dir_exists "$BANK/$VAULT/$EXPIRED_IMAGE" "expired image dir present before expire"
 
-# Run expire
-dirvish-expire --quiet 2>/tmp/expire-stderr.txt
+# Scope expire to this vault to avoid cross-test interference
+dirvish-expire --vault "$VAULT" --quiet 2>/tmp/expire-stderr.txt
 EXIT=$?
 assert_eq "$EXIT" "0" "dirvish-expire exits 0"
 
