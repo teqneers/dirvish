@@ -1,0 +1,25 @@
+FROM fedora:41
+
+RUN dnf install -y \
+        rsync \
+        perl \
+        perl-Time-ParseDate \
+        openssh-server \
+        openssh-clients \
+        btrfs-progs \
+        perl-App-cpanminus \
+        make \
+        gcc \
+        glibc-devel \
+    && dnf clean all
+
+# Time::Period may not be packaged for Fedora
+RUN cpanm --quiet --notest Time::Period
+
+COPY . /dirvish-src/
+RUN sh /dirvish-src/tests/runner/install_dirvish.sh /dirvish-src
+
+COPY tests/runner/ /tests/
+RUN chmod +x /tests/*.sh /tests/cases/*.sh
+
+ENTRYPOINT ["/tests/entrypoint.sh"]

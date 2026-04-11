@@ -1,0 +1,35 @@
+name: Tests
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+    branches: [master]
+
+jobs:
+  test:
+    name: "${{ matrix.distro }} / ${{ matrix.mode }}"
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        distro: [debian-bookworm, ubuntu-2404, fedora-41]
+        mode: [standard, btrfs]
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build image (${{ matrix.distro }})
+        run: |
+          docker build \
+            -f tests/Dockerfile.${{ matrix.distro }} \
+            -t dirvish-test:${{ matrix.distro }} \
+            .
+
+      - name: Run standard tests
+        if: matrix.mode == 'standard'
+        run: docker run --rm dirvish-test:${{ matrix.distro }}
+
+      - name: Run BTRFS tests
+        if: matrix.mode == 'btrfs'
+        run: docker run --rm --privileged dirvish-test:${{ matrix.distro }} --btrfs
