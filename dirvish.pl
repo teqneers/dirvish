@@ -256,7 +256,7 @@ GetOptions($Options, qw(
 	version
 	)) or usage;
 
-chomp($$Options{Server} = `hostname`);
+chomp($$Options{Server} = `hostname 2>/dev/null || uname -n`);
 
 if ($$Options{image})
 {

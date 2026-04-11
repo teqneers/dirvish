@@ -67,7 +67,7 @@ Backup-complete: 2000-01-01 00:00:01
 Expire: +1 day == 2000-01-02 00:00:00
 EOF
 
-dirvish-expire --quiet 2>/tmp/btrfs-expire-stderr.txt
+dirvish-expire --vault "$VAULT" --quiet 2>/tmp/btrfs-expire-stderr.txt
 EXPIRE_EXIT=$?
 assert_eq "$EXPIRE_EXIT" "0" "dirvish-expire exits 0"
 
