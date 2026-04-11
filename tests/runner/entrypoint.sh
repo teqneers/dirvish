@@ -33,7 +33,7 @@ fi
 # $rclient is left undef and rsync uses a plain local path — no SSH required.
 # This is simpler and more portable than configuring sshd in every container.
 export DIRVISH_CLIENT
-DIRVISH_CLIENT=$(hostname)
+DIRVISH_CLIENT=$(uname -n)
 export DIRVISH_RSH="ssh"   # fallback value; unused when client == server
 
 echo "Running tests (BTRFS_MODE=$BTRFS_MODE, TEST_BANK=$TEST_BANK, CLIENT=$DIRVISH_CLIENT)"
