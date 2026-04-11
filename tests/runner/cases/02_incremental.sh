@@ -14,7 +14,7 @@ echo "unchanged" > "$SOURCE/unchanged.txt"
 echo "original content here" > "$SOURCE/changed.txt"
 
 cat > "$BANK/$VAULT/dirvish/default.conf" << EOF
-client: localhost
+client: ${DIRVISH_CLIENT:-127.0.0.1}
 tree: $SOURCE
 rsh: $DIRVISH_RSH
 expire: +30 days

@@ -10,7 +10,7 @@ BANK=${TEST_BANK:-/test-bank}
 VAULT=test-err-nosrc
 mkdir -p "$BANK/$VAULT/dirvish"
 cat > "$BANK/$VAULT/dirvish/default.conf" << EOF
-client: localhost
+client: ${DIRVISH_CLIENT:-127.0.0.1}
 tree: /nonexistent-source-path-xyz
 rsh: $DIRVISH_RSH
 expire: +30 days

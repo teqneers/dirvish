@@ -13,7 +13,7 @@ mkdir -p "$BANK/$VAULT/dirvish" "$SOURCE"
 echo "btrfs data" > "$SOURCE/file.txt"
 
 cat > "$BANK/$VAULT/dirvish/default.conf" << EOF
-client: localhost
+client: ${DIRVISH_CLIENT:-127.0.0.1}
 tree: $SOURCE
 rsh: $DIRVISH_RSH
 expire: +30 days
@@ -59,7 +59,7 @@ cat > "$BANK/$VAULT/$EXPIRED_IMAGE/summary" << EOF
 vault: $VAULT
 branch: default
 Image: $EXPIRED_IMAGE
-client: localhost
+client: ${DIRVISH_CLIENT:-127.0.0.1}
 tree: $SOURCE
 Status: success
 Backup-begin: 2000-01-01 00:00:00

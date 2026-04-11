@@ -12,7 +12,7 @@ for V in runall-vault-a runall-vault-b; do
     mkdir -p "$BANK/$V/dirvish" "$SRC"
     echo "data for $V" > "$SRC/data.txt"
     cat > "$BANK/$V/dirvish/default.conf" << EOF
-client: localhost
+client: ${DIRVISH_CLIENT:-127.0.0.1}
 tree: $SRC
 rsh: $DIRVISH_RSH
 expire: +30 days

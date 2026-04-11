@@ -33,8 +33,10 @@ if $BTRFS_MODE; then
     echo "btrfs: 1" >> /etc/dirvish/master.conf
 fi
 
-# RSH option written once for all test vaults to use
-export DIRVISH_RSH="ssh -o StrictHostKeyChecking=no -o PasswordAuthentication=no"
+# RSH option written once for all test vaults to use.
+# Use 127.0.0.1 (not localhost) to avoid IPv6 resolution; sshd is bound to 127.0.0.1.
+export DIRVISH_RSH="ssh -o StrictHostKeyChecking=no -o PasswordAuthentication=no -o PreferredAuthentications=publickey"
+export DIRVISH_CLIENT="127.0.0.1"
 
 echo "Running tests (BTRFS_MODE=$BTRFS_MODE, TEST_BANK=$TEST_BANK)"
 echo ""

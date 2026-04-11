@@ -13,7 +13,7 @@ echo "second file"  > "$SOURCE/file2.txt"
 echo "nested"       > "$SOURCE/subdir/nested.txt"
 
 cat > "$BANK/$VAULT/dirvish/default.conf" << EOF
-client: localhost
+client: ${DIRVISH_CLIENT:-127.0.0.1}
 tree: $SOURCE
 rsh: $DIRVISH_RSH
 expire: +30 days
