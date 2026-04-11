@@ -178,7 +178,16 @@ This also specifies a default value for
 Specify a default \*[branch] to use.
 .TP
 .Bi btrfs: (B)
-If true, use btrfs snapshots instead of hardlinked trees.
+If true, use BTRFS copy-on-write snapshots instead of hardlinked trees.
+Requires the \*[bank] to reside on a BTRFS filesystem.
+Snapshot creation and deletion are significantly faster than hardlinking
+on large filesystems.
+.B dirvish\-expire
+will use
+.B btrfs subvolume delete
+instead of
+.B rm \-rf
+to remove image trees.
 .TP
 .Bi client: \*ousername@\*cclient_name (S)
 specify a client to back up.
@@ -445,7 +454,7 @@ the
 .B pre\-server
 shell command will also have the exclude file's path in
 .B DIRVISH_EXCLUDE
-so it may read or modify the exlude list.
+so it may read or modify the exclude list.
 
 .SM STDOUT from each
 .I shell_command
@@ -592,21 +601,19 @@ otherwise the transfer will be done through a remote shell process.
 The optional
 .I alias
 specifies the path that should appear in the index
-so 
+so
 .B dirvish\-locate
-will report paths consistant with  common usage.
+will report paths consistent with common usage.
 This can help reduce confusion when dealing with users
 unfamiliar with the physical topology of their network provided files.
 .TP
 .Br no\-run: (B)
 Don't actually do anything.
 
-Process all configuration files, options and tests
+Process all configuration files, options and tests,
 then produce a summary/configuration file on standard output
 and exit.
-
-I can't think why you would do this in a configuration file
-but if you want to shoot yourself in the foot, be my guest.
+Setting this in a configuration file will prevent any backup from running.
 .TP
 .Bi vault: vault (S)
 Specify the \*[vault] to store the \*[image] in.
@@ -691,15 +698,32 @@ Set a priority value for a job.
 Relative priorities will be used in scheduling jobs.
 \}
 .TP
+.Bi concurrent: n (S)
+Maximum number of
+.B dirvish
+backup jobs to run in parallel when
+.B dirvish\-runall
+is invoked.
+
+.default 1
+.TP
 .Br Runall: (L)
-Specify \*[branch]es to be scheduled for automated backups.
-Each value is specified in the form
+List of vaults to back up when
+.B dirvish\-runall
+is invoked.
+Each entry is of the form
 .ti +.5i
 .br
-vault:branch [image_time]
+vault[:branch] [image_time]
 .br
 
-If image_time is set here it will be used.
+.I image_time
+is passed to
+.B dirvish
+as
+.B \-\-image\-time
+and controls the name of the created image, not when the backup runs.
+Scheduling is handled externally (e.g.\& cron or a systemd timer).
 
 This option can only be set in the master configuration file
 and multiple values will accumulate.

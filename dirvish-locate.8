@@ -42,9 +42,15 @@ dirvish\-locate \- locate file versions in dirvish images
 .I vault\*o:branch\*c
 .I pattern
 .SH DESCRIPTION
-Locate versions of files in a dirvish vault
+Locate versions of files in a dirvish vault.
 
-The index of each image specified \*[vault] is searched for paths matching
+.B dirvish\-locate
+requires that the
+.B index:
+option was set when the images were created.
+Images without an index file are skipped silently.
+
+The index of each image in the specified \*[vault] is searched for paths matching
 .IR pattern .
 Each path found matching the
 .I pattern
@@ -109,6 +115,7 @@ severe errors.
 .TP
 0
 success
+.TP
 200-219
 An error was encountered in loading a configuration file.
 .TP

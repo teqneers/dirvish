@@ -40,9 +40,21 @@ dirvish\-runall \- run a set of dirvish backup jobs.
 .SH SYNOPSIS
 .BI dirvish\-runall [OPTIONS]
 .SH DESCRIPTION
-Run all the jobs specified in the
+Run all the jobs listed in the
 .B Runall
 field of the dirvish master configuration file.
+
+Jobs are started immediately when
+.B dirvish\-runall
+is invoked; scheduling is handled by an external mechanism such as cron.
+
+If
+.B concurrent:
+is set in the master configuration file,
+up to that many
+.B dirvish
+processes will run in parallel.
+The default is to run jobs sequentially.
 .SH OPTIONS
 Each option may be unambiguously abbreviated.
 .TP

@@ -55,7 +55,7 @@ and if transfer errors were detected an
 file.
 The transfer
 .B log
-retains the the output of any pre and post processing commands
+retains the output of any pre and post processing commands
 and the rsync log listing all files that were changed or added with some statistical information.
 The
 .B summary
@@ -249,15 +249,15 @@ The post-server command reported an error.
 Its exit code modulo 10 is added to 60
 .TP
 70-79
-A post-client or post-server command could not be run.
+A pre-client or pre-server command could not be run.
 .TP
 80-89
-The pre-server command reported an error.  
-Its exit code modulo 10 is added to 80
+The pre-server command reported an error.
+Its exit code modulo 10 is added to 80.
 .TP
 90-99
-The pre-server command reported an error.  
-Its exit code modulo 10 is added to 90
+The pre-client command reported an error.
+Its exit code modulo 10 is added to 90.
 .TP
 100-149
 Rsync encountered a non-fatal error.
