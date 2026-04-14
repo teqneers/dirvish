@@ -140,8 +140,6 @@ if (!$$Options{quiet})
 		qw(VAULT:BRANCH IMAGE CREATED EXPIRED);
 }
 
-$cannot_expire = 0;
-
 for $expire (sort {imsort()} @expires)
 {
 	my ($created, $expired);
@@ -182,9 +180,6 @@ for $expire (sort {imsort()} @expires)
 
 	system("rm -rf $$expire{path}");
 }
-
-$cannot_expire > 199 and exit 199;
-$cannot_expire > 0 and exit $cannot_expire;
 
 exit 0;
 
