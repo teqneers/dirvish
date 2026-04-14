@@ -150,7 +150,7 @@ for $expire (sort {imsort()} @expires)
 
 	if (!$unexpired{$$expire{vault}}{$$expire{branch}})
 	{
-		printf "cannot expire %s:%s:%s No unexpired good images\n",
+		printf STDERR "dirvish-expire: notice: cannot expire %s:%s:%s No unexpired good images\n",
 			$$expire{vault},
 			$$expire{branch},
 			$$expire{image};
@@ -158,7 +158,6 @@ for $expire (sort {imsort()} @expires)
 			and ++$unexpired{$$expire{vault}}{$$expire{branch}};
 		# By virtue of the sort order this will be the newest
 		# image so that older ones can be expired.
-		$cannot_expire++;
 		next;
 	}
 	$$Options{quiet} or printf "%-15s %-15s %-16.16s  %s\n",
